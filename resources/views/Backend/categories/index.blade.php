@@ -1,0 +1,504 @@
+@extends('Backend.layout.master')
+@section('title')
+    {{trans('page_title.categories')}}
+@endsection
+@section('css')
+
+@endsection
+@section('content')
+    <div class="container-xl wide-xl">
+        <div class="nk-content-body">
+            <div class="nk-block-head nk-block-head-sm">
+                <div class="nk-block-between">
+                    <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">{{trans('page_title.categories')}}</h3>
+                        <div class="nk-block-des text-soft">
+                            <p>{{trans('categories.You have total')}} {{$categories->count()}} {{trans('page_title.categories')}}</p>
+                        </div>
+                    </div><!-- .nk-block-head-content -->
+                    <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                            <div class="toggle-expand-content" data-content="pageMenu">
+                                <ul class="nk-block-tools g-3">
+                                    @ability('admin','create_product_categories')
+                                    <li><a href="javascript:void(0)" class="btn btn-white btn-outline-light "
+                                           data-bs-toggle="modal" data-bs-target="#createCategory"><em
+                                                class="icon ni ni-tag"></em><span>{{trans('page_title.create category')}}</span></a>
+                                    </li>
+                                    @endability
+                                    {{--                                    <li>--}}
+                                    {{--                                        <a href="javascript:void(0)" class="btn btn-icon btn-primary d-md-none"  data-bs-toggle="modal" data-bs-target="#createCategory"><em--}}
+                                    {{--                                                class="icon ni ni-plus"></em></a>--}}
+                                    {{--                                    </li>--}}
+
+                                </ul>
+                            </div>
+                        </div><!-- .toggle-wrap -->
+                    </div><!-- .nk-block-head-content -->
+                </div><!-- .nk-block-between -->
+            </div><!-- .nk-block-head -->
+            <div class="nk-block">
+                <div class="card card-stretch">
+                    <div class="card-inner-group">
+                        @if($categories->count() > 0)
+                            <div class="card-inner position-relative card-tools-toggle">
+                                <div class="card-title-group">
+                                    <div class="card-tools me-n1">
+                                        <ul class="btn-toolbar gx-1">
+                                            <li>
+                                                <a href="#" class="btn btn-icon search-toggle toggle-search"
+                                                   data-target="search"><em class="icon ni ni-search"></em></a>
+                                            </li><!-- li -->
+                                            <li class="btn-toolbar-sep"></li><!-- li -->
+
+                                        </ul><!-- .btn-toolbar -->
+                                    </div><!-- .card-tools -->
+                                </div><!-- .card-title-group -->
+                                <div class="card-search search-wrap" data-search="search">
+                                    <div class="card-body">
+                                        <div class="search-content">
+                                            <a href="#" class="search-back btn btn-icon toggle-search"
+                                               data-target="search"><em class="icon ni ni-arrow-left"></em></a>
+                                            <input type="text" class="form-control border-transparent form-focus-none"
+                                                   id="search" placeholder="Search by user or email">
+                                            <button class="search-submit btn btn-icon"><em
+                                                    class="icon ni ni-search"></em></button>
+                                        </div>
+                                    </div>
+                                </div><!-- .card-search -->
+                            </div><!-- .card-inner -->
+                            <div class="card-inner p-0">
+                                <div class="nk-tb-list nk-tb-ulist date_request">
+                                    <div class="nk-tb-item nk-tb-head">
+                                        <div class="nk-tb-col nk-tb-col-check">
+                                            <div class="custom-control custom-control-sm custom-checkbox notext">
+                                                <input type="checkbox" class="select_all custom-control-input" id="uid">
+                                                <label class="custom-control-label" for="uid"></label>
+                                            </div>
+                                        </div>
+                                        <div class="nk-tb-col"><span>{{trans('categories.name')}}</span></div>
+                                        <div class="nk-tb-col"><span>{{trans('categories.products count')}}</span></div>
+                                        <div class="nk-tb-col"><span>{{trans('categories.parent')}}</span></div>
+                                        <div class="nk-tb-col"><span>{{trans('categories.status')}}</span></div>
+                                        <div class="nk-tb-col"><span>{{trans('categories.created_at')}}</span></div>
+                                        <div class="nk-tb-col"><span>{{trans('categories.action')}}</span></div>
+                                        {{--                                        <div class="nk-tb-col nk-tb-col-tools text-end">--}}
+                                        {{--                                            <div class="dropdown">--}}
+                                        {{--                                                <a href="#" class="btn btn-xs btn-outline-light btn-icon dropdown-toggle" data-bs-toggle="dropdown" data-offset="0,5"><em class="icon ni ni-plus"></em></a>--}}
+                                        {{--                                                <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end">--}}
+                                        {{--                                                    <ul class="link-tidy sm no-bdr">--}}
+                                        {{--                                                        <li>--}}
+                                        {{--                                                            <div class="custom-control custom-control-sm custom-checkbox">--}}
+                                        {{--                                                                <input type="checkbox" class="custom-control-input" checked="" id="bl">--}}
+                                        {{--                                                                <label class="custom-control-label" for="bl">Balance</label>--}}
+                                        {{--                                                            </div>--}}
+                                        {{--                                                        </li>--}}
+                                        {{--                                                        <li>--}}
+                                        {{--                                                            <div class="custom-control custom-control-sm custom-checkbox">--}}
+                                        {{--                                                                <input type="checkbox" class="custom-control-input" checked="" id="ph">--}}
+                                        {{--                                                                <label class="custom-control-label" for="ph">Phone</label>--}}
+                                        {{--                                                            </div>--}}
+                                        {{--                                                        </li>--}}
+                                        {{--                                                        <li>--}}
+                                        {{--                                                            <div class="custom-control custom-control-sm custom-checkbox">--}}
+                                        {{--                                                                <input type="checkbox" class="custom-control-input" id="vri">--}}
+                                        {{--                                                                <label class="custom-control-label" for="vri">Verified</label>--}}
+                                        {{--                                                            </div>--}}
+                                        {{--                                                        </li>--}}
+                                        {{--                                                        <li>--}}
+                                        {{--                                                            <div class="custom-control custom-control-sm custom-checkbox">--}}
+                                        {{--                                                                <input type="checkbox" class="custom-control-input" id="st">--}}
+                                        {{--                                                                <label class="custom-control-label" for="st">Status</label>--}}
+                                        {{--                                                            </div>--}}
+                                        {{--                                                        </li>--}}
+                                        {{--                                                    </ul>--}}
+                                        {{--                                                </div>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                    </div><!-- .nk-tb-item -->
+                                    @foreach($categories as $category)
+                                        <div class="nk-tb-item">
+                                            <div class="nk-tb-col nk-tb-col-check">
+                                                <div class="custom-control custom-control-sm custom-checkbox notext">
+                                                    <input type="checkbox" class="select_all custom-control-input"
+                                                           value="{{$category->id}}}" id="uid{{$category->id}}">
+                                                    <label class="custom-control-label"
+                                                           for="uid{{$category->id}}"></label>
+                                                </div>
+                                            </div>
+                                            <div class="nk-tb-col">
+                                                <a href="{{route('admin.product_categories.edit',$category->id)}}">
+                                                    <span class="tb-amount" id="name_delete">{{$category->name}}</span>
+                                                </a>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-md">
+                                                <span>{{$category->products_count}}</span>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-md">
+                                                <span>{{$category->parent != null ? $category->parent->name : '-'}}</span>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-md">
+                                                <span>{!! $category->statusLabel() !!}</span>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-md">
+                                                <span>{!! $category->createdAt() !!}</span>
+                                            </div>
+
+                                            <div class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1">
+                                                    @ability('admin','update_product_categories')
+
+                                                    <li class="nk-tb-action-hidden">
+                                                        <a href="javascript:void(0)"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#editCategory{{$category->id}}"
+                                                           class="btn btn-trigger btn-icon">
+                                                            <em class="icon ni ni-edit" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top"
+                                                                title="{{trans('page_title.edit')}}"></em>
+                                                        </a>
+                                                    </li>
+                                                    @endability
+                                                    @ability('admin','delete_product_categories')
+
+                                                    <li class="nk-tb-action-hidden">
+                                                        <a href="javascript:void(0)"
+                                                           onclick="deleteType({{$category->id}})"
+                                                           class="btn btn-trigger btn-icon">
+                                                            <em class="icon ni ni-delete" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top"
+                                                                title="{{trans('page_title.delete')}}"></em>
+                                                        </a>
+                                                    </li>
+
+                                                    @endability
+
+                                                </ul>
+                                            </div>
+                                        </div><!-- .nk-tb-item -->
+                                    @endforeach
+                                </div><!-- .nk-tb-list -->
+                            </div><!-- .card-inner -->
+                            <div class="p-3">
+                                {{$categories->links()}}
+                            </div>
+
+                        @else
+                            <div class="card-inner p-0">
+                                <div class="text-center" style="padding: 50px">
+                                    <div>
+                                        <img src="{{asset('backend/images/empty.png')}}">
+
+                                    </div>
+                                    <div>
+                                        <a><span>{{trans('categories.No Categories Info Found')}}</span></a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        @endif
+                    </div><!-- .card-inner-group -->
+                </div><!-- .card -->
+            </div><!-- .nk-block -->
+        </div>
+    </div>
+    @ability('admin','create_product_categories')
+
+    <!-- Create Category -->
+    <div class="modal fade modal-lg" id="createCategory">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{trans('categories.create new category')}}</h5>
+                    <a href="" class="close" data-bs-dismiss="modal"
+                       aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('admin.product_categories.store')}}" method="post"
+                          class="form-validate is-alter" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-gs pb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="full-name">{{trans('categories.name')}} <span
+                                            class="text-danger">( {{trans('categories.ar')}} )</span></label>
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="full-name" name="name[ar]"
+                                               value="{{old('name.ar')}}" required>
+                                        @error('name[ar]')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="full-name">{{trans('categories.name')}} <span
+                                            class="text-danger">( {{trans('categories.en')}} )</span></label>
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="full-name" name="name[en]"
+                                               value="{{old('name.en')}}" required>
+                                        @error('name[en]')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-gs pb-3">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="full-name">{{trans('categories.the parent')}}</label>
+                                    <div class="form-control-wrap">
+                                        <select class="form-select js-select2" name="parent_id">
+                                            <option value="0" disabled selected>
+                                                ----- {{trans('categories.select the parent')}}
+                                                -----
+                                            </option>
+                                            @foreach($main_categories as $category)
+                                                <option value="{{$category->id}}"
+                                                        @if(old('parent_id') == $category->id) selected @endif>{{$category->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('parent_id')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="cover">{{trans('categories.cover')}}</label>
+                                    <div class="form-control-wrap">
+                                        <input type="file" class="form-control" id="cover" name="cover"
+                                               onchange="loadFile(event)">
+                                        @error('cover')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="full-name">{{trans('categories.status')}}</label>
+                                    <div class="form-control-wrap">
+                                        <select class="form-select js-select2" name="status">
+                                            <option value="0" disabled selected>
+                                                ----- {{trans('categories.select status')}}
+                                                -----
+                                            </option>
+                                            <option value="1"
+                                                    @if(old('status') == 1) selected @endif>{{trans('categories.Active')}}</option>
+                                            <option value="0"
+                                                    @if(old('status') == 0) selected @endif>{{trans('categories.Inactive')}}</option>
+                                        </select>
+                                        @error('status')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="cover">-----------</label>
+                                    <div class="user-avatar sq xl">
+                                        <img class="img-thumbnail" src="{{asset('backend/images/empty2.png')}}"
+                                             id="output"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-lg btn-primary">{{trans('categories.save')}}</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- End create Category -->
+    @endability
+
+    @ability('admin','update_product_categories')
+
+    <!-- Edit Category -->
+    @foreach($categories as $category)
+        <div class="modal fade modal-lg" id="editCategory{{$category->id}}">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{trans('categories.update category')}}
+                            ( {{$category->getTranslation('name','ar')}} )</h5>
+                        <a href="" class="close" data-bs-dismiss="modal"
+                           aria-label="Close">
+                            <em class="icon ni ni-cross"></em>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{route('admin.product_categories.update',$category->id)}}" method="post"
+                              class="form-validate is-alter" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="row g-gs pb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="full-name">{{trans('categories.name')}} <span
+                                                class="text-danger">( {{trans('categories.ar')}} )</span></label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" id="full-name" name="name[ar]"
+                                                   value="{{old('name.ar',$category->getTranslation('name','ar'))}}"
+                                                   required>
+                                            <input type="hidden" class="form-control" name="id"
+                                                   value="{{$category->id}}">
+                                            @error('name[ar]')<span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="full-name">{{trans('categories.name')}} <span
+                                                class="text-danger">( {{trans('categories.en')}} )</span></label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" id="full-name" name="name[en]"
+                                                   value="{{old('name.en',$category->getTranslation('name','en'))}}"
+                                                   required>
+                                            @error('name[en]')<span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-gs pb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label"
+                                               for="full-name">{{trans('categories.the parent')}}</label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-select js-select2" name="parent_id">
+                                                <option value="0" disabled selected>
+                                                    ----- {{trans('categories.select the parent')}}
+                                                    -----
+                                                </option>
+                                                @foreach($main_categories as $x)
+                                                    <option value="{{$x->id}}"
+                                                            @if(old('parent_id',$category->parent_id) == $x->id) selected @endif>{{$x->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('parent_id')<span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="cover">{{trans('categories.cover')}}</label>
+                                        <div class="form-control-wrap">
+                                            <input type="file" class="form-control" id="cover" name="cover"
+                                                   onchange="loadFile(event)">
+                                            @error('cover')<span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="full-name">{{trans('categories.status')}}</label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-select js-select2 " name="status">
+                                                <option value="0" disabled selected>
+                                                    ----- {{trans('categories.select status')}}
+                                                    -----
+                                                </option>
+                                                <option value="0"
+                                                        @if(old('status',$category->status) == 0) selected @endif>{{trans('categories.Inactive')}}</option>
+                                                <option value="1"
+                                                        @if(old('status',$category->status) == 1) selected @endif>{{trans('categories.Active')}}</option>
+                                            </select>
+                                            @error('status')<span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="cover">-----------</label>
+                                        <div class="user-avatar sq xl">
+                                            <img class="img-thumbnail"
+                                                 src="@if(isset($category->cover)) {{asset('uploads/'.$category->cover)}} @else {{asset('backend/images/empty2.png')}} @endif"
+                                                 id="output"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <button type="submit"
+                                        class="btn btn-lg btn-primary">{{trans('categories.update')}}</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+    <!-- End edit Category -->
+    @endability
+
+@endsection
+@section('script')
+
+    <script>
+        var loadFile = function (event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('output');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        };
+        // function readURL(input) {
+        //     if (input.files && input.files[0]) {
+        //         var reader = new FileReader();
+        //         reader.onload = function (e) {
+        //             $('#uploadedimg').show();
+        //             $('#uploadedimg').attr('src', e.target.result);
+        //         }
+        //         reader.readAsDataURL(input.files[0]);
+        //     }
+        // }
+
+        function deleteType(id) {
+
+            var name = $('#name_delete').text();
+
+            Swal.fire({
+                title: '{{trans('categories.Delete!')}}',
+                text: '{{trans('categories.Are you sure to delete')}}' + "(" + name + ")؟",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: '{{trans('categories.cancel')}}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '{{trans('categories.ok')}}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#file' + id).hide();
+                    $.get('admin/product_categories/delete/' + id, function (deleted) {
+
+                        if (deleted.exists == true) {
+                            toastr.clear();
+                            NioApp.Toast('<h5>{{trans('categories.success')}}</h5><p>{{trans('categories.category deleted successfully')}}</p>', 'success', {position: 'top-center'});
+                            setInterval('location.reload()', 1000);
+                        } else {
+
+
+                        }
+
+                    })
+
+
+                }
+            })
+
+
+        }
+    </script>
+
+@endsection
