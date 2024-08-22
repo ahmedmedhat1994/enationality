@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Backend\RequestFiles;
 use App\Models\Backend\Requests;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -16,15 +17,34 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Milon\Barcode\Facades\Barcode;
+use function Monolog\toArray;
 
 
 class FrontendController extends Controller
 {
     public function index()
     {
+
+
         return view('Frontend.index');
+
     }
 
+    public function pay($code){
+
+        return view('Frontend.pay',compact('code'));
+    }
+
+    public function payGo(Request $request)
+    {
+
+        $Pay = Requests::where('code', $request->code)->first();
+
+        $Pay->status = 5;
+        $Pay->save();
+        return redirect()->route('sucssess',$Pay->code);
+
+    }
 
     public function request(){
 
@@ -33,7 +53,6 @@ class FrontendController extends Controller
 //        return view('Frontend.request');
 
     }
-
     public function request_edit($code)
     {
         $data = Requests::with('files')->where('code',$code)->first();
@@ -46,7 +65,6 @@ class FrontendController extends Controller
         }
 
     }
-
     public function request_update(Request $request, $id)
     {
         $update = Requests::where('id',$id)->first();
@@ -92,7 +110,6 @@ class FrontendController extends Controller
         return redirect()->route('sucssess',$update->code);
 
     }
-
     public function request_store(Request $request)
     {
         $store = new Requests();
@@ -141,7 +158,17 @@ class FrontendController extends Controller
             $req_file->save();
         }
 
+        $message =
+'*تم تسجيل طلبكم بنجاح*
 
+كود الطلب هوه : *'.$store->code.'*
+يرجى متابعة الطلب خلال 4 ايام عمل
+من خلال الرابط التالي
+
+' .route('sucssess',$store->code);
+        ;
+        $mobile = '01009885650';
+        whatsapp($mobile, $message);
         return redirect()->route('sucssess',$store->code);
 
     }
@@ -165,13 +192,29 @@ class FrontendController extends Controller
 
     }
 
+
    public function tracking(){
 
 
-        return 'hello';
-//        return view('Frontend.tracking');
+        return view('Frontend.tracking');
 
    }
+    public function trackingGo(Request $request){
+
+        $validate = Requests::where('code',$request->code)->first();
+
+        if ($validate == null){
+            return redirect()->back()->withErrors('عفوا هذا الكود غير صحيح تاكد من صحة الكود')->withInput();
+        }
+        if ($validate->user_id != Auth::id()){
+            return redirect()->back()->withErrors('عفوا هذه البيانات مسجلة برقم موبايل اخر يرجي تسجيل الدخول برقم الموبايل المسجل بة الطلب')->withInput();
+        }
+
+        return redirect()->route('sucssess',$request->code);
+
+
+    }
+
 
     public function login(){
 
@@ -216,8 +259,6 @@ class FrontendController extends Controller
 
 
     }
-
-
     public function otp_validate(Request  $request)
     {
 
@@ -244,7 +285,6 @@ class FrontendController extends Controller
 
 
     }
-
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
@@ -254,6 +294,96 @@ class FrontendController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+
+
+    public function dashboard()
+    {
+        $datas = Requests::query()
+            ->when(\request()->type != null, function ($query) {
+                $query->where('status',\request()->type);
+            })
+        ->get();
+        return view('Frontend.dashboard',compact('datas'));
+
+    }
+    public function review($id)
+    {
+        $data = Requests::with('files')->first();
+        return view('Frontend.review',compact('data'));
+
+    }
+    public function review_update(Request  $request)
+    {
+        $update = Requests::with('files')->where('id',$request->id)->first();
+
+        $update->name_ar = $request->name_ar;
+        $update->name_en = $request->name_en;
+        $update->birth_date = date('Y-m-d',strtotime($request->birth_date));
+        $update->mobile = $request->mobile;
+        $update->address = $request->address;
+        $update->nationality = $request->nationality;
+        $update->type = $request->type;
+        $update->update_date = date('Y-m-d');
+        $update->updated_by = Auth::id();
+
+        if ($request->id_personal_photo) {
+
+            $update_file = RequestFiles::findOrFail($request->id_personal_photo);
+            $update_file->comment = $request->comment_personal_photo;
+            $update_file->status = $request->status_personal_photo;
+            $update_file->save();
+        }
+        if ($request->id_passport) {
+            $update_file = RequestFiles::findOrFail($request->id_passport);
+            $update_file->comment = $request->comment_passport;
+            $update_file->status = $request->status_passport;
+            $update_file->save();
+        }
+        if ($request->id_stamp_paper) {
+
+            $update_file = RequestFiles::findOrFail($request->id_stamp_paper);
+            $update_file->comment = $request->comment_stamp_paper;
+            $update_file->status = $request->status_stamp_paper;
+            $update_file->save();
+        }
+
+        if ($request->paid){
+            $update->payed = 1;
+            $update->appointment_date = date('Y-m-d',strtotime(Carbon::now()->addDay(5)));
+            $update->status = 3;
+            $update->save();
+
+            $message =
+                '*تم الموافقة على طلبكم*
+                
+يرجى التوجة الى الادارة العامه للجوازات والهجرة والجنسية
+فى تاريخ :*'.$update->appointment_date.'*
+مع احضار جميع اصول الاوراق المقدمة فى الطلب'
+            ;
+            $mobile = '01009885650';
+            whatsapp($mobile, $message);
+
+
+        }else{
+            $array = $update->files->pluck('status')->toArray();
+            $check = count(array_unique($array)) === 1;
+            if ($check)
+            {
+                $update->status = 1;
+                $update->save();
+
+            }else
+            {
+                $update->status = 2;
+                $update->save();
+
+            }
+        }
+
+
+        return redirect()->route('dashboard');
     }
 
 }

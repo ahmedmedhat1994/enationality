@@ -103,6 +103,16 @@
                                         <div class="d-flex justify-content-center justify-items-center">
                                             <span class="fw-bold fs-22px text-secondary">تم تقديم الطلب بنجاح</span>
                                         </div>
+                                    @elseif($data['status'] == 5)
+                                        <div class="d-flex justify-content-center justify-items-center">
+                                    <span>
+                                        <em class="icon ni ni-check-circle text-success" style="font-size: 150px;"></em>
+
+                                    </span>
+                                        </div>
+                                        <div class="d-flex justify-content-center justify-items-center">
+                                            <span class="fw-bold fs-22px text-secondary">تم دفع الرسوم بنجاح</span>
+                                        </div>
                                     @endif
                                     <div class="row p-3">
                                         <div class="col-lg-3 d-flex align-content-center align-items-center justify-content-center  py-3">
@@ -149,7 +159,7 @@
                                                         <em class="icon ni ni-check-circle"></em>
                                                         <span class="fw-bold fs-15px">تم الموافقة على طلبكم يرجي دفع الرسوم</span>
                                                         <br>
-                                                        <a href="{{route('request.edit',$data['code'])}}" class="btn btn-secondary mt-2">ادفع من هنا</a>
+                                                        <a href="{{route('pay',$data['code'])}}" class="btn btn-secondary mt-2">ادفع من هنا</a>
                                                     </div>
                                                 @elseif($data['status'] == 3)
                                                     <div class="alert alert-icon alert-success" role="alert">
@@ -165,6 +175,11 @@
                                                     <div class="alert alert-icon alert-secondary" role="alert">
                                                         <em class="icon ni ni-alert-circle"></em>
                                                         <span class="fw-bold fs-15px">جاري مراجعة الطلب</span>
+                                                    </div>
+                                                @elseif($data['status'] == 5)
+                                                    <div class="alert alert-icon alert-info" role="alert">
+                                                        <em class="icon ni ni-alert-circle"></em>
+                                                        <span class="fw-bold fs-15px">جاري مراجعة حالة الدفع وسيتم ابلاغكم فور قبول الطلب</span>
                                                     </div>
                                                 @endif
                                             </div>

@@ -42,41 +42,14 @@
                     </div>
                 </div>
                 <div class="nk-block pt-5">
-                    <div class="row g-gs d-inline-flex justify-content-center justify-items-center">
-                        <div class="col-xl-4">
+                    <form action="{{route('trackingGo')}}" method="post" autocomplete="off">
+                        @csrf
+                    <div class="row g-gs d-block justify-content-center justify-items-center">
+                        <div class="col-xl-12">
                             <div class="card card-bordered">
                                 <div class="card-inner">
-                                    <div class="align-center flex-wrap g-4 text-center">
-                                        <div class="nk-block-image w-120px flex-shrink-0 mx-auto">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
-                                                <rect x="15" y="5" width="56" height="70" rx="6" ry="6" fill="#e3e7fe" stroke="#6576ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect>
-                                                <path d="M69.88,85H30.12A6.06,6.06,0,0,1,24,79V21a6.06,6.06,0,0,1,6.12-6H59.66L76,30.47V79A6.06,6.06,0,0,1,69.88,85Z" fill="#fff" stroke="#6576ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                                <polyline points="60 16 60 31 75 31.07" fill="none" stroke="#6576ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline>
-                                                <line x1="58" y1="50" x2="32" y2="50" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                                <line x1="46" y1="38" x2="32" y2="38" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                                <line x1="68" y1="44" x2="32" y2="44" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                                <line x1="68" y1="56" x2="32" y2="56" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                                <line x1="58" y1="62" x2="32" y2="62" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                                <line x1="68" y1="68" x2="32" y2="68" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                                <line x1="58" y1="75" x2="32" y2="75" fill="none" stroke="#c4cefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                                            </svg>                                        </div>
-                                        <div class="nk-block-content">
-                                            <div class="nk-block-content-head">
-                                                <h5>طلب إقامة</h5>
-                                                <p class="text-soft">تقديم طلب الاقامه الان اسهل قم بتقديم طلب وارفاق الاوراق المطلوب وسيتم تحديد موعد التوجة الى الادارة العامه للجوازات</p>
-                                            </div>
-                                        </div>
-                                        <div class="nk-block-content flex-shrink-0 mt-lg-4 mx-auto">
-                                            <a href="{{route('request')}}" class="btn btn-lg btn-outline-primary">تقديم طلب</a>
-                                        </div>
-                                    </div>
-                                </div><!-- .card-inner -->
-                            </div><!-- .card -->
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="card card-bordered">
-                                <div class="card-inner">
-                                    <div class="align-center flex-wrap g-4 text-center">
+                                <div class="row">
+                                    <div class="col-lg-2">
                                         <div class="nk-block-image w-120px flex-shrink-0 mx-auto">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
                                                 <rect x="3" y="10" width="70" height="50" rx="7" ry="7" fill="#e3e7fe" stroke="#6576ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect>
@@ -96,20 +69,40 @@
                                                 <path d="M61.43,64l3.51,3.31A6.83,6.83,0,0,0,76.2,64.79" fill="none" stroke="#6576ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                                             </svg>
                                         </div>
-                                        <div class="nk-block-content">
-                                            <div class="nk-block-content-head">
-                                                <h5>تتبُّع الطلب</h5>
-                                                <p class="text-soft">قم بتتبع الطلب ومعرفة المطلوب من اوراق وما تم الوصول الية من قبل الادارة العامه للجوازات والهجرة والجنسية </p>
+
+                                    </div>
+
+                                    <div class="col-lg-8 d-flex">
+                                        <div class="form-group w-100">
+                                            <label class="form-label" for="code"></label>
+                                            <div class="form-control-wrap">
+                                                <input type="text" class="form-control fs-3 fw-bold" name="code" value="{{old('code')}}"  id="code" placeholder="اكتب رقم الطلب المرسل لك على الواتساب" style="height: 80px;">
                                             </div>
                                         </div>
-                                        <div class="nk-block-content flex-shrink-0 mt-lg-4 mx-auto">
-                                            <a href="{{route('tracking')}}" class="btn btn-lg btn-outline-primary">تتبع طلب</a>
+                                    </div>
+                                    <div class="col-lg-2 d-flex  justify-content-center justify-items-center align-content-center mt-3">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-lg btn-primary" style="height: 80px;">تتبُّع الطلب</button>
                                         </div>
                                     </div>
+                                    @if ($errors->any())
+                                        <div class="col-12 d-flex text-center mt-3">
+                                            <div class="alert alert-danger w-100">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li class="fs-5 fw-bold">{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                                 </div><!-- .card-inner -->
                             </div><!-- .card -->
                         </div>
                     </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -118,7 +111,25 @@
 @endsection
 
 @section('script')
+<script>
+    $(document).ready(function() {
+        $('#code').on('input', function() {
+            var value = $(this).val();
 
+            // Remove any non-digit characters
+            value = value.replace(/\D/g, '');
+
+            // Limit the length to 6 digits
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+
+            $(this).val(value);
+        });
+
+    });
+
+</script>
 
 @endsection
 

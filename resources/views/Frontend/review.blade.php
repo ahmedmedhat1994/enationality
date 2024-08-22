@@ -1,6 +1,6 @@
 @extends('Frontend.layout.master')
 @section('title')
-    تعديل
+    مراجعة الطلب
 @endsection
 
 @section('style')
@@ -17,10 +17,7 @@
                         <img src="{{asset('frontend/logo.png')}}" width="300px"/>
                     </div>
                     <div class="col-6 d-flex justify-content-end  align-items-center" >
-                        <a class="btn btn-outline-primary mx-4" href="#" >
-                            <em class="icon ni ni-clock"></em>
-                            <span>تتبُّع الطلب</span>
-                        </a>
+
                         @guest
                             <a class="btn btn-outline-primary" href="{{route('login')}}">
                                 <em class="icon ni ni-user"></em>
@@ -55,12 +52,10 @@
                             <div class="card card-bordered h-100" id="mobileNumer">
                                 <div class="card-inner">
                                     <div class="card-head">
-                                        <h5 class="card-title">تقديم طلب استخراج/ تجديد إقامة</h5>
+                                        <h5 class="card-title">مراجعة الطلب رقم : {{$data->code}}</h5>
                                     </div>
-                                    <div class="alert alert-danger alert-icon fw-bold fs-6">
-                                        <em class="icon ni ni-cross-circle"></em> <strong>يرجي الانتباه </strong>! يرجي تصحيح الاخطاء وإعادة ارسال الطلب من جديد.
-                                    </div>
-                                    <form id="loginForm" action="{{route('request.update',$data->id)}}" method="post" autocomplete="off" enctype="multipart/form-data">
+
+                                    <form id="loginForm" action="{{route('review_update')}}" method="post" autocomplete="off" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">
                                             <label class="form-label">أختر الجنسية</label>
@@ -85,14 +80,14 @@
                                         </div>
 
                                         <div id="info" style="display: none">
-                                            <span  class="text-danger fs-4 fw-bold">* الاوراق المطلوبة</span>
+                                            <span  class="text-danger fs-4 fw-bold">* البيانات المطلوبة</span>
                                             <br>
-                                            <span  class="text-danger ">يرجى ارفاق الملفات المطلوبه بغد نسخها من خلال الماسح الضوئي</span>
 
                                             <div class="form-group pt-3">
                                                 <label class="form-label" for="name_ar">الاسم ( عربي )</label>
                                                 <div class="form-control-wrap">
                                                     <input type="text" class="form-control" id="name_ar" name="name_ar" required value="{{old('name_ar',$data->name_ar)}}" placeholder="اكتب اسمك كامل باللغة العربية">
+                                                    <input type="hidden" class="form-control" id="id" name="id" required value="{{old('id',$data->id)}}" placeholder="اكتب اسمك كامل باللغة العربية">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -122,7 +117,7 @@
                                                 </div>
                                             </div>
                                             @foreach($data->files as $x)
-                                                @if($x->status != 1)
+                                            <div class="mb-5">
                                             <div class="form-group">
                                                 @if($x->name == 'personal_photo')
                                                 <label class="form-label" for="{{$x->name}}">صورة شخصية</label>
@@ -131,34 +126,64 @@
                                                 @elseif($x->name == 'stamp_paper')
                                                     <label class="form-label" for="{{$x->name}}">صورة الختم</label>
                                                 @endif
-                                                    <div class="form-control-wrap">
-                                                    <div class="form-file">
-                                                        <input type="file" class="form-file-input" id="{{$x->name}}" name="{{$x->name}}" required>
 
-                                                        <label class="form-file-label" for="{{$x->name}}">اختر الملف</label>
+                                                    <div class=" row">
+                                                        <div class="col-md-8 d-flex align-items-center align-content-center text-center ">
+                                                            <span class="text-center">{{$x->name}}</span>
+                                                        </div>
+                                                        @if($x->file != '')
+                                                        <div class="col-md-4">
+                                                            <a href="{{asset('uploads/requests/'.$x->file)}}" download="{{$x->name.'_'.$data->code}}" class="btn btn-dim btn-primary">تحميل</a>
+                                                            <a href="{{asset('uploads/requests/'.$x->file)}}" class="btn btn-dim btn-info" target="_blank">عرض</a>
+                                                        </div>
+                                                        @else
+                                                            <span class="lead-text bg-danger text-white text-center">لم يتم تحميل ملف </span>
+                                                        @endif
                                                     </div>
-                                                </div>
                                                     <input type="hidden" class="" id="{{$x->name}}" name="id_{{$x->name}}" value="{{$x->id}}" required>
 
                                             </div>
-                                                    @if($x->comment != null)
-                                                        <div class="alert alert-danger alert-icon"  role="alert">
-                                                            <em class="icon ni ni-alert-circle"></em>
-                                                            <span class="fw-bold"><strong>ملاحظة</strong>. {{$x->comment}}.</span>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="comment_{{$x->name}}">ملاحظات</label>
+                                                            <div class="form-control-wrap">
+                                                                <input type="text" class="form-control fs-5 fw-bold" id="comment_{{$x->name}}" name="comment_{{$x->name}}" value="{{old('comment_'.$x->name)}}" placeholder="فى حالة رفض المستند اترك تعليق">
+                                                            </div>
                                                         </div>
-
-                                                    @endif
-                                                    @endif
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="form-label">حالة المستند</label>
+                                                            <div class="form-control-wrap">
+                                                                <select class="form-select  js-select2" name="status_{{$x->name}}">
+                                                                    <option value="0" selected>اختر حالة المستند</option>
+                                                                    <option value="1"  {{old('status_'.$x->name,$data->status) == 1 ? 'selected' : ' '}}  >مقبول</option>
+                                                                    <option value="2"  {{old('status_'.$x->name,$data->status) == 1 ? 'selected' : ' '}}  >مرفوض</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
                                             @endforeach
 
-
                                         </div>
+                                        @if($data->status == 5)
+                                            <input type="hidden" class="form-control fs-5 fw-bold"  name="paid" value="1" placeholder="فى حالة رفض المستند اترك تعليق">
 
-                                        <div class="form-group d-flex justify-content-center mt-5">
-                                            <button type="submit" class="btn btn-lg btn-primary">
-                                                إرسال للمراجعه
+                                            <div class="form-group d-flex justify-content-center mt-5">
+                                            <button type="submit" class="btn btn-lg btn-success">
+                                                تاكيد الدفع
                                             </button>
                                         </div>
+                                        @else
+                                            <div class="form-group d-flex justify-content-center mt-5">
+                                                <button type="submit" class="btn btn-lg btn-primary">
+                                                    إرسال
+                                                </button>
+                                            </div>
+                                        @endif
                                     </form>
                                 </div>
                             </div>
