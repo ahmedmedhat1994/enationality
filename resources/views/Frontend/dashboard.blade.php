@@ -39,8 +39,8 @@
                     </div>
                 </div>
                 <div class="nk-block pt-5">
-                    <div class="row g-gs d-inline-flex justify-content-center justify-items-center w-100">
-                        <div class="col-md-10 d-flex justify-content-around align-content-center mx-2">
+                    <div class="row g-gs d-inline-flex justify-content-center justify-items-center ">
+                        <div class="col-md-10 d-flex justify-content-between align-content-center mx-2">
                             <a href="{{route('dashboard')}}" class="btn btn-gray  d-block justify-content-center align-content-center" style="width: 150px; height: 150px;"><em class="icon ni ni-layers-fill" style="font-size: 40px;"></em><span class="px-0 pt-3 d-block fs-4 fw-bold"> الكل</span> </a>
                             <a href="{{route('dashboard').'?type=0'}}" class="btn btn-primary  d-block justify-content-center align-content-center" style="width: 150px; height: 150px;"><em class="icon ni ni-layers-fill" style="font-size: 40px;"></em><span class="px-0 pt-3 d-block fs-4 fw-bold"> جديدة</span> </a>
                             <a href="{{route('dashboard').'?type=4'}}" class="btn btn-info  d-block justify-content-center align-content-center" style="width: 150px; height: 150px;"><em class="icon ni ni-swap" style="font-size: 40px;"></em><span class="px-0 pt-3 d-block fs-4 fw-bold">عائد مراجعة </span> </a>
